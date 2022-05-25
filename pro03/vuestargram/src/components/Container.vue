@@ -7,14 +7,20 @@
     <!-- 필터선택페이지 -->
     <div
       class="upload-image"
+      :class="선택한필터"
       :style="`background-image:url(${imgUpload})`"
     ></div>
     <div class="filters">
-      <div class="filter-1"></div>
-      <div class="filter-1"></div>
-      <div class="filter-1"></div>
-      <div class="filter-1"></div>
-      <div class="filter-1"></div>
+      <FilterBox
+        :imgUpload="imgUpload"
+        :filter="data"
+        v-for="data in filterdata"
+        :key="data"
+        ><template v-slot:a>{{ data }}</template>
+        <template v-slot:default="작명">
+          <div>{{ 작명.msg }}</div></template
+        >
+      </FilterBox>
     </div>
   </div>
 
@@ -22,20 +28,30 @@
     <!-- 글작성페이지 -->
     <div
       class="upload-image"
+      :class="선택한필터"
       :style="`background-image:url(${imgUpload})`"
     ></div>
     <div class="write">
       <textarea @input="$emit('imgUrl', $event.target.value)" class="write-box">
-write!</textarea
+write!
+</textarea
       >
     </div>
   </div>
 </template>
 
 <script>
+import filterdata from '../assets/filterdata.js';
 import Post from './Post.vue';
+import FilterBox from './FilterBox.vue';
 export default {
   name: 'Container',
+  data() {
+    return {
+      filterdata: filterdata,
+      선택한필터: '',
+    };
+  },
   props: {
     게시물들: Array,
     step: Number,
@@ -43,6 +59,12 @@ export default {
   },
   components: {
     Post: Post,
+    FilterBox,
+  },
+  mounted() {
+    this.emitter.on('filter', (a) => {
+      this.선택한필터 = a;
+    });
   },
 };
 </script>

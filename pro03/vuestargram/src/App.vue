@@ -9,7 +9,10 @@
     </ul>
     <img src="./assets/logo.png" class="logo" />
   </div>
-
+  <h4>{{ $store.state.name }}</h4>
+  <button @click="$store.commit('이름변경')">버튼</button>
+  <h4>{{ $store.state.age }}</h4>
+  <button @click="$store.commit('나이증가', 10)">증가</button>
   <Container
     :게시물들="게시물들"
     :step="step"
@@ -38,6 +41,7 @@ export default {
       step: 0,
       imgUpload: '',
       작성한글: '',
+      선택한필터: '',
     };
   },
   methods: {
@@ -64,7 +68,7 @@ export default {
         date: 'May 15',
         liked: false,
         content: this.작성한글,
-        filter: 'perpetua',
+        filter: this.선택한필터,
       };
       this.게시물들.unshift(내게시물);
       this.step = 0;
@@ -72,6 +76,11 @@ export default {
   },
   components: {
     Container: Container,
+  },
+  mounted() {
+    this.emitter.on('filter', (a) => {
+      this.선택한필터 = a;
+    });
   },
 };
 </script>
