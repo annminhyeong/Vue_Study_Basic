@@ -1,41 +1,49 @@
 <template>
-  <div v-if="step == 0">
-    <Post :게시물="data" v-for="data in 게시물들" :key="data" />
-  </div>
-
-  <div v-if="step == 1">
-    <!-- 필터선택페이지 -->
-    <div
-      class="upload-image"
-      :class="선택한필터"
-      :style="`background-image:url(${imgUpload})`"
-    ></div>
-    <div class="filters">
-      <FilterBox
-        :imgUpload="imgUpload"
-        :filter="data"
-        v-for="data in filterdata"
-        :key="data"
-        ><template v-slot:a>{{ data }}</template>
-        <template v-slot:default="작명">
-          <div>{{ 작명.msg }}</div></template
-        >
-      </FilterBox>
+  <div>
+    <div v-if="step == 0">
+      <Post :게시물="data" v-for="data in 게시물들" :key="data" />
     </div>
-  </div>
 
-  <div v-if="step == 2">
-    <!-- 글작성페이지 -->
-    <div
-      class="upload-image"
-      :class="선택한필터"
-      :style="`background-image:url(${imgUpload})`"
-    ></div>
-    <div class="write">
-      <textarea @input="$emit('imgUrl', $event.target.value)" class="write-box">
+    <div v-if="step == 1">
+      <!-- 필터선택페이지 -->
+      <div
+        class="upload-image"
+        :class="선택한필터"
+        :style="`background-image:url(${imgUpload})`"
+      ></div>
+      <div class="filters">
+        <FilterBox
+          :imgUpload="imgUpload"
+          :filter="data"
+          v-for="data in filterdata"
+          :key="data"
+          ><template v-slot:a>{{ data }}</template>
+          <template v-slot:default="작명">
+            <div>{{ 작명.msg }}</div></template
+          >
+        </FilterBox>
+      </div>
+    </div>
+
+    <div v-if="step == 2">
+      <!-- 글작성페이지 -->
+      <div
+        class="upload-image"
+        :class="선택한필터"
+        :style="`background-image:url(${imgUpload})`"
+      ></div>
+      <div class="write">
+        <textarea
+          @input="$emit('imgUrl', $event.target.value)"
+          class="write-box"
+        >
 write!
 </textarea
-      >
+        >
+      </div>
+    </div>
+    <div v-if="step == 3">
+      <MyPage :one="1" />
     </div>
   </div>
 </template>
@@ -44,6 +52,7 @@ write!
 import filterdata from '../assets/filterdata.js';
 import Post from './Post.vue';
 import FilterBox from './FilterBox.vue';
+import MyPage from './MyPage.vue';
 export default {
   name: 'Container',
   data() {
@@ -60,6 +69,7 @@ export default {
   components: {
     Post: Post,
     FilterBox,
+    MyPage,
   },
   mounted() {
     this.emitter.on('filter', (a) => {

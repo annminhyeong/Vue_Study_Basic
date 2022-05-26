@@ -13,6 +13,11 @@
   <button @click="$store.commit('이름변경')">버튼</button>
   <h4>{{ $store.state.age }}</h4>
   <button @click="$store.commit('나이증가', 10)">증가</button>
+  <p>{{ now1() }} {{ count }}</p>
+  <p>{{ now2 }} {{ count }}</p>
+  <button @click="count++">now1 버튼</button>
+  <p>{{ name }}</p>
+  <p>{{ 내나이 }}</p>
   <Container
     :게시물들="게시물들"
     :step="step"
@@ -20,6 +25,8 @@
     @write="작성한글 = $event"
   />
   <button @click="more">더보기</button>
+  <p>{{ $store.state.more }}</p>
+  <button @click="$store.dispatch('getData')">서버에 ajax 요청하기</button>
   <div class="footer">
     <ul class="footer-button-plus">
       <input @change="upload" type="file" id="file" class="inputfile" />
@@ -32,19 +39,22 @@
 import axios from 'axios';
 import postdata from './assets/postdata.js';
 import Container from './components/Container.vue';
+import { mapState, mapMutations } from 'vuex';
 export default {
   name: 'App',
   data() {
     return {
+      count: 0,
       게시물들: postdata,
       클릭수: 0,
-      step: 0,
+      step: 3,
       imgUpload: '',
       작성한글: '',
       선택한필터: '',
     };
   },
   methods: {
+    ...mapMutations(['나이증가', '이름변경']),
     more() {
       axios
         .get(`https://codingapple1.github.io/vue/more${this.클릭수}.json`)
@@ -73,6 +83,22 @@ export default {
       this.게시물들.unshift(내게시물);
       this.step = 0;
     },
+    now1() {
+      return new Date();
+    },
+  },
+  computed: {
+    ...mapState(['name', 'age', 'likes']),
+    ...mapState({ 내이름: 'name', 내나이: 'age' }),
+    name() {
+      return this.$store.state.name;
+    },
+    age() {
+      return this.$store.state.age;
+    },
+    now2() {
+      return new Date();
+    },
   },
   components: {
     Container: Container,
@@ -86,7 +112,6 @@ export default {
 </script>
 
 <style>
-@import url('style.css');
 body {
   margin: 0;
 }
